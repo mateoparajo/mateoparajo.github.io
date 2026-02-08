@@ -1,33 +1,39 @@
-<!-- New code that detects app availability better and has fallback timing for older iPhones like iPhone XR -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Improved App Detection</title>
+    <title>Adaptive Timeout Example</title>
     <script>
-        function detectAppAvailability() {
+        function detectDevice() {
             const userAgent = navigator.userAgent;
-            const isOlderIphone = /iPhone/.test(userAgent) && /OS [12]_[0-9]+/.test(userAgent);
-            const isModernIphone = /iPhone/.test(userAgent) && /OS [13-9]_[0-9]+/.test(userAgent);
+            if (/iPhone XR/.test(userAgent)) {
+                return 3500; // Timeout for iPhone XR
+            } else if (/iPhone/.test(userAgent)) {
+                return 2000; // Timeout for modern iPhones
+            } else if (/Android/.test(userAgent)) {
+                return 2500; // Timeout for Android devices
+            }
+            return 2000; // Default timeout
+        }
 
-            if (isModernIphone) {
-                // Code for better app detection on modern iPhones
-                console.log('App available on modern iPhones.');
-            } else if (isOlderIphone) {
-                // Fallback timing for older iPhones like iPhone XR
-                console.log('Fallback timing for older iPhones.');
+        function initApp() {
+            const appAvailable = /* checkAppAvailability() */; // You need to implement your app availability check
+            const timeoutDuration = detectDevice();
+
+            if (appAvailable) {
+                // Launch the app after the computed timeout
                 setTimeout(() => {
-                    alert('Please update your app for the best experience.');
-                }, 3000);
+                    // Code to launch the app
+                }, timeoutDuration);
             } else {
-                console.log('App availability detection for other devices.');
+                // Fallback to the web version
+                setTimeout(() => {
+                    window.location.href = 'https://yourwebversionurl.com';
+                }, timeoutDuration);
             }
         }
-        window.onload = detectAppAvailability;
     </script>
 </head>
-<body>
-    <h1>Welcome to Improved App Detection</h1>
+<body onload="initApp()">
+    <h1>Loading App...</h1>
 </body>
 </html>
