@@ -15,67 +15,34 @@
   </script>
 
   <style>
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      margin: 0;
-      padding: 24px;
-      display: grid;
-      place-items: center;
-      min-height: 100vh;
-      background: #0b0f14;
-      color: #e8eef6;
-    }
-    .card {
-      width: min(520px, 100%);
-      background: #121a24;
-      border: 1px solid #223044;
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-    }
-    h1 { font-size: 18px; margin: 0 0 10px; }
-    p { margin: 0 0 14px; line-height: 1.35; color: #c7d4e6; }
-    .row { display: flex; gap: 10px; flex-wrap: wrap; }
-    a.btn {
-      display: inline-block;
-      padding: 12px 14px;
-      border-radius: 12px;
-      text-decoration: none;
-      border: 1px solid #2a3a52;
-      background: #1a2636;
-      color: #e8eef6;
-      font-weight: 600;
-    }
-    a.btn.primary { background: #2a69ff; border-color: #2a69ff; }
-    small { display:block; margin-top: 10px; color:#93a7c2; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin:0; padding:24px; display:grid; place-items:center; min-height:100vh; background:#0b0f14; color:#e8eef6; }
+    .card { width:min(520px,100%); background:#121a24; border:1px solid #223044; border-radius:16px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,.35); }
+    h1 { font-size:18px; margin:0 0 10px; }
+    p { margin:0 0 14px; line-height:1.35; color:#c7d4e6; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; }
+    a.btn { display:inline-block; padding:12px 14px; border-radius:12px; text-decoration:none; border:1px solid #2a3a52; background:#1a2636; color:#e8eef6; font-weight:600; }
+    a.btn.primary { background:#2a69ff; border-color:#2a69ff; }
+    small { display:block; margin-top:10px; color:#93a7c2; }
     code { background:#0b0f14; padding:2px 6px; border-radius:6px; }
   </style>
 
   <script>
-    // =========================
-    // CONFIG
-    // =========================
     const USERNAME = "mparajo448";
-
-    // tiempo mínimo para que GA registre antes de redirigir
-    // (si lo bajás demasiado, podés perder eventos)
-    const REDIRECT_DELAY_MS = 650;
+    const REDIRECT_DELAY_MS = 900; // un poco más para asegurar medición
 
     function param(name) {
       const v = new URLSearchParams(window.location.search).get(name);
       return (v && v.trim()) ? v.trim() : null;
     }
 
-    // Para diferenciar QRs:
-    // /ig?src=kart
-    // /ig?src=casco
-    // /ig?src=sticker
     const src = param("src") || "default";
 
-    const appLink = `instagram://user?username=${USERNAME}`;
+    // Link normal del perfil (siempre sirve)
     const webLink = `https://www.instagram.com/${USERNAME}/`;
 
-    // Track de eventos propios
+    // Universal link: suele abrir app directo al perfil (especialmente iOS)
+    const universalProfileLink = `https://www.instagram.com/_u/${USERNAME}/`;
+
     function track(eventName) {
       try {
         if (typeof gtag === "function") {
@@ -88,31 +55,29 @@
       } catch (e) {}
     }
 
-    // Intenta abrir app + fallback a web
     function go() {
       track("qr_open");
 
-      // Intento abrir la app
-      window.location.href = appLink;
+      // 1) Intento más confiable: universal link al perfil
+      window.location.href = universalProfileLink;
 
-      // Fallback al navegador
+      // 2) Fallback al link normal del perfil (si no abre app o no navega)
       setTimeout(() => {
         window.location.href = webLink;
       }, REDIRECT_DELAY_MS);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      // Setea links de botones por si iOS bloquea el auto-redirect
       const btnApp = document.getElementById("btnApp");
       const btnWeb = document.getElementById("btnWeb");
 
-      btnApp.href = appLink;
+      // Botón "Abrir en app": usamos el universal link (mejor que instagram:// en iOS)
+      btnApp.href = universalProfileLink;
       btnWeb.href = webLink;
 
-      btnApp.addEventListener("click", () => track("qr_click_app"));
+      btnApp.addEventListener("click", () => track("qr_click_open_profile"));
       btnWeb.addEventListener("click", () => track("qr_click_web"));
 
-      // Dispara redirección automática
       go();
     });
   </script>
@@ -120,12 +85,12 @@
 
 <body>
   <div class="card">
-    <h1>Abriendo Instagram…</h1>
-    <p>Si no se abre automáticamente, tocá una opción:</p>
+    <h1>Abriendo tu perfil…</h1>
+    <p>Si no se abre en tu perfil, tocá una opción:</p>
 
     <div class="row">
-      <a id="btnApp" class="btn primary" href="#">Abrir en la app</a>
-      <a id="btnWeb" class="btn" href="#">Abrir en el navegador</a>
+      <a id="btnApp" class="btn primary" href="#">Abrir perfil en Instagram</a>
+      <a id="btnWeb" class="btn" href="#">Abrir en navegador</a>
     </div>
 
     <small>
