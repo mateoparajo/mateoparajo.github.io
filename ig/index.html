@@ -1,39 +1,44 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="es">
 <head>
-    <title>Adaptive Timeout Example</title>
-    <script>
-        function detectDevice() {
-            const userAgent = navigator.userAgent;
-            if (/iPhone XR/.test(userAgent)) {
-                return 3500; // Timeout for iPhone XR
-            } else if (/iPhone/.test(userAgent)) {
-                return 2000; // Timeout for modern iPhones
-            } else if (/Android/.test(userAgent)) {
-                return 2500; // Timeout for Android devices
-            }
-            return 2000; // Default timeout
-        }
+  <meta charset="utf-8" />
+  <title>Instagram – mparajo448</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        function initApp() {
-            const appAvailable = /* checkAppAvailability() */; // You need to implement your app availability check
-            const timeoutDuration = detectDevice();
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5EP61PTFRX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5EP61PTFRX', { anonymize_ip: true });
+  </script>
 
-            if (appAvailable) {
-                // Launch the app after the computed timeout
-                setTimeout(() => {
-                    // Code to launch the app
-                }, timeoutDuration);
-            } else {
-                // Fallback to the web version
-                setTimeout(() => {
-                    window.location.href = 'https://yourwebversionurl.com';
-                }, timeoutDuration);
-            }
-        }
-    </script>
+  <script>
+    const USERNAME = "mparajo448";
+    const profileUrl = `https://www.instagram.com/${USERNAME}/`;
+
+    function param(name) {
+      const v = new URLSearchParams(window.location.search).get(name);
+      return (v && v.trim()) ? v.trim() : null;
+    }
+
+    const src = param("src") || "default";
+
+    // Track del escaneo
+    try {
+      gtag("event", "qr_open", {
+        src,
+        username: USERNAME,
+        page_path: location.pathname
+      });
+    } catch (e) {}
+
+    // Redirect corto y robusto
+    setTimeout(() => {
+      window.location.replace(profileUrl);
+    }, 200);
+  </script>
 </head>
-<body onload="initApp()">
-    <h1>Loading App...</h1>
-</body>
+<body></body>
 </html>
