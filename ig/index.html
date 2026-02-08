@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Instagram</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <script>
+    const username = "mparajo448";
+    const appLink = `instagram://user?username=${username}`;
+    const webLink = `https://www.instagram.com/${username}/`;
+
+    // Intento abrir la app
+    window.location.href = appLink;
+
+    // Fallback si no abre la app
+    setTimeout(() => {
+      window.location.href = webLink;
+    }, 800);
+  </script>
+</head>
+<body></body>
+</html>
