@@ -15,28 +15,30 @@
   </script>
 
   <script>
-    const USERNAME = "mparajo448";
-    const profileUrl = `https://www.instagram.com/${USERNAME}/`;
+  const USERNAME = "mparajo448";
+  const profileUrl = `https://www.instagram.com/${USERNAME}/`;
 
-    function param(name) {
-      const v = new URLSearchParams(window.location.search).get(name);
-      return (v && v.trim()) ? v.trim() : null;
-    }
+  function param(name) {
+    const v = new URLSearchParams(window.location.search).get(name);
+    return (v && v.trim()) ? v.trim() : null;
+  }
 
-    const src = param("src") || "default";
+  const src = param("src") || "default";
 
-    // Evento de escaneo
-    try {
-      gtag("event", "qr_open", {
-        src: src,
-        username: USERNAME,
-        page_path: location.pathname
-      });
-    } catch (e) {}
+  // Evento de escaneo
+  try {
+    gtag("event", "qr_open", {
+      src: src,
+      username: USERNAME,
+      page_path: location.pathname
+    });
+  } catch (e) {}
 
-    // Redirección SIMPLE Y ROBUSTA
+  // Delay mínimo para asegurar envío del evento
+  setTimeout(() => {
     window.location.replace(profileUrl);
-  </script>
+  }, 200);
+</script>
 </head>
 <body></body>
 </html>
